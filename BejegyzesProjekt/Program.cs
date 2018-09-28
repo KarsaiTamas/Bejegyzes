@@ -8,7 +8,7 @@ namespace BejegyzesProjekt
 {
     class Program
     {
-        static void Szoveg_Textbol(string helye)
+        public static void Szoveg_Textbol(string helye)
         {
             StreamReader olvas = new StreamReader(helye);
             while (!olvas.EndOfStream)
@@ -21,7 +21,74 @@ namespace BejegyzesProjekt
             olvas.Close();
         }
 
+        public static void Kiir_Textbe(string helye)
+        {
+            StreamWriter kiir = new StreamWriter(helye,false,Encoding.UTF8);
+            for (int i = 0; i < bejegyez_lista.Count; i++)
+            {
+                kiir.WriteLine(bejegyez_lista[i].Kiir());
+            }
+
+            kiir.Close();
+        }
+
         private static List<Bejegyzes> bejegyez_lista = new List<Bejegyzes>();
+        public static bool Van_E_35_Tobb(List<Bejegyzes> lista_bejegy)
+        {
+            for (int i = 0; i < lista_bejegy.Count; i++)
+            {
+                if (lista_bejegy[i].Likeok>35)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+        public static bool Van_E_15_Kissebb(List<Bejegyzes> lista_bejegy)
+        {
+            for (int i = 0; i < lista_bejegy.Count; i++)
+            {
+                if (lista_bejegy[i].Likeok < 15)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public static void Rendez_Csokkeno(List<Bejegyzes> lista_bejegy)
+        {
+            for (int i = 0; i < lista_bejegy.Count; i++)
+            {
+                for (int j = lista_bejegy.Count-1; j > i; j--)
+                {
+                    if (lista_bejegy[i].Likeok< lista_bejegy[j].Likeok)
+                    {
+                        Bejegyzes csere= lista_bejegy[i];
+                        lista_bejegy[i] = lista_bejegy[j];
+                        lista_bejegy[j] = csere;
+
+                    }
+                }
+            }
+        }
+
+        public static int Legnepszerubb_Bejegyzes(List<Bejegyzes> lista_bejegy)
+        {
+            int max= lista_bejegy[0].Likeok;
+            int vissza = 0;
+            for (int i = 0; i < lista_bejegy.Count; i++)
+            {
+                if (lista_bejegy[i].Likeok>max)
+                {
+                    max = lista_bejegy[i].Likeok;
+                    vissza = i;
+                }
+            }
+
+            return vissza;
+        } 
+
         static void Main(string[] args)
         {
             Random rnd = new Random();
@@ -87,6 +154,32 @@ namespace BejegyzesProjekt
                 Console.WriteLine(item);
                 Console.WriteLine();
             }
+
+            Console.WriteLine("A legnépszerűbb bejegyzes: \n"+
+                bejegyez_lista[Legnepszerubb_Bejegyzes(bejegyez_lista)]);
+            Console.WriteLine("A lájkjai száma: "+ bejegyez_lista[Legnepszerubb_Bejegyzes(bejegyez_lista)].Likeok);
+            if (Van_E_35_Tobb(bejegyez_lista)==true)
+            {
+                Console.WriteLine("Van olyan bejegyzés ami 35-nél több liket kapott.");
+            }else
+            {
+                Console.WriteLine("Nincs olyan bejegyzés ami 35-nél több liket kapott.");
+            }
+            if (Van_E_15_Kissebb(bejegyez_lista) == true)
+            {
+                Console.WriteLine("Van olyan bejegyzés ami 15-nél kevesebb liket kapott.");
+            }
+            else
+            {
+                Console.WriteLine("Nincs olyan bejegyzés ami 15-nél kevesebb liket kapott.");
+            }
+            Rendez_Csokkeno(bejegyez_lista);
+
+            foreach (var item in bejegyez_lista)
+            {
+                Console.WriteLine(item);
+            }
+            Kiir_Textbe("bejegyzesek_rendezett.txt");
             Console.ReadLine();
         }
     }

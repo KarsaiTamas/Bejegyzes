@@ -14,6 +14,7 @@ namespace BejegyzesProjekt
         private DateTime letrejott;
         private DateTime szerkesztve;
 
+         
 
         public Bejegyzes(string szerzo,string tartalom)
         {
@@ -32,7 +33,7 @@ namespace BejegyzesProjekt
             set
             {
                 this.tartalom = value;
-                letrejott = DateTime.Now;
+                szerkesztve = DateTime.Now;
             }
         }
 
@@ -77,12 +78,11 @@ namespace BejegyzesProjekt
         public string Kiir()
         {
             string vissza="";
-            vissza = this.Szerzo +
-                " - " + this.Likeok +
-                " - " + this.Letrejott +
-                "\nSzerkesztve: " +
-                this.Szerkesztve +
-                "\n" + this.Tartalom;
+            vissza = this.Szerzo + ";" +
+                  this.Likeok + ";" +
+                  this.Letrejott + ";" +
+                  this.Szerkesztve + ";" +
+                  this.Tartalom;
 
 
 
@@ -94,7 +94,7 @@ namespace BejegyzesProjekt
         {
             string vissza = "";
 
-            if (this.Letrejott!=this.Szerkesztve)
+            if (this.Letrejott==this.Szerkesztve)
             {
                 
                 vissza = this.Szerzo +
